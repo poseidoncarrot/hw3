@@ -61,14 +61,71 @@ public:
 
 private:
   /// Add whatever helper functions and data members you need below
-
-
-
-
+  void trickleUp(size_t index);
+  void trickleDown(size_t index);
+  int m_;
+  PComparator comp_;
+  std::vector<T> data_;
 };
 
 // Add implementation of member functions here
+template <typename T, typename PComparator>
+Heap<T, PComparator>::Heap(int m, PComparator c)
+  : m_(m), comp_(c) {
+    if (m > 2) {
+      throw std::invalid_argument("Heaparyness must be at least 2")
+    }
+  }
 
+template <typename T, typename PComparator>
+Heap<T, PComparator>::~Heap() {}
+  
+template <typename T, typename PComparator>
+bool Heap<T, PComparator>::empty() const {
+  return data_.empty();
+}
+
+template <typename T, typenamePComparator>
+size_t Heap<T, PComparator>::size() const {
+  return data_.size();
+}
+
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::push(const T& item) {
+  data_.push_back(item);
+  trickleUp(data_.size() - 1);
+}
+
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::trickleUp(size_t index) {
+  while (index > 0) {
+    size_t parent = (index - 1) / static_cast<size_t>(m_);
+    if (!comp_(data_[index], data_[parent])) {
+      return;
+    }
+    std::swap(data_[index], data_[parent]);
+    index = parent;
+  }
+}
+
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::trickleDown(size_t index) {
+  while (true) {
+    size_t high = index;
+    size_t first = static_cast<size_t>(m_) * index + 1;
+    for (int i = 0; i < m_; ++i) {
+      size_t child = first + static_cast<size_t>(i);
+      if (child < data_.size() and comp_(data_[child], data_[high])) {
+        high = child;
+      }
+    }
+    if (high == index) {
+      return;
+    }
+    std::swap(data_[index], data_[high]);
+    index = high;
+  }
+}
 
 // We will start top() for you to handle the case of 
 // calling top on an empty heap
@@ -81,14 +138,11 @@ T const & Heap<T,PComparator>::top() const
     // ================================
     // throw the appropriate exception
     // ================================
-
-
+    throw std::underflow_error("Cannot access top of empty heap");
   }
   // If we get here we know the heap has at least 1 item
   // Add code to return the top element
-
-
-
+  return data_[0];
 }
 
 
@@ -101,12 +155,13 @@ void Heap<T,PComparator>::pop()
     // ================================
     // throw the appropriate exception
     // ================================
-
-
+    throw std::underflow_error("Cannot pop empty heap");
   }
-
-
-
+  data_[0] = data_.back();
+  data_.pop_back();
+  if (!data_.empty()) {
+    trickleDown(0);
+  }
 }
 
 
