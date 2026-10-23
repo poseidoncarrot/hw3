@@ -2,6 +2,8 @@
 #define HEAP_H
 #include <functional>
 #include <stdexcept>
+#include <vector>
+#include <utility>
 
 template <typename T, typename PComparator = std::less<T> >
 class Heap
@@ -72,8 +74,8 @@ private:
 template <typename T, typename PComparator>
 Heap<T, PComparator>::Heap(int m, PComparator c)
   : m_(m), comp_(c) {
-    if (m > 2) {
-      throw std::invalid_argument("Heaparyness must be at least 2")
+    if (m < 2) {
+      throw std::invalid_argument("Heaparyness must be at least 2");
     }
   }
 
@@ -85,7 +87,7 @@ bool Heap<T, PComparator>::empty() const {
   return data_.empty();
 }
 
-template <typename T, typenamePComparator>
+template <typename T, typename PComparator>
 size_t Heap<T, PComparator>::size() const {
   return data_.size();
 }

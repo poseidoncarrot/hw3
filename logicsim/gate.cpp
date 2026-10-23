@@ -90,7 +90,7 @@ Event* Or2Gate::update(uint64_t current_time)
 }
 
 
-NotGate::NoteGate(Wire* input, Wire* output) : Gate(1,output)
+NotGate::NotGate(Wire* input, Wire* output) : Gate(1,output)
 {
     wireInput(0,input);
 }
